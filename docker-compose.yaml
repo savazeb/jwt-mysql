@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+
+  django-train:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "django-train"
+    command: python manage.py runserver 0.0.0.0:80
+    ports:
+      - "80:80"
+    volumes: 
+      - ./app:/django-api/app
+    depends_on: 
+      - sql-train
+
+  sql-train:
+    image: mysql:5.7
+    container_name: "sql-train"
+    environment:
+      MYSQL_DATABASE: "db"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "12345678"
+      MYSQL_ROOT_PASSWORD: "12345678"
+    ports:
+      - "3306:3306"
+    # volumes:
+    #   - ./db:/var/lib/mysql
+  
+
