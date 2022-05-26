@@ -1,19 +1,5 @@
 version: '3.7'
 services:
-
-  django-train:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: "django-train"
-    command: python manage.py runserver 0.0.0.0:80
-    ports:
-      - "80:80"
-    volumes: 
-      - ./app:/django-api/app
-    depends_on: 
-      - sql-train
-
   sql-train:
     image: mysql:5.7
     container_name: "sql-train"
@@ -26,5 +12,17 @@ services:
       - "3306:3306"
     # volumes:
     #   - ./db:/var/lib/mysql
+  django-train:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "django-train"
+    command: python manage.py runserver 0.0.0.0:80
+    ports:
+      - "80:80"
+    volumes: 
+      - ./app:/django-api/app
+    depends_on: 
+      - sql-train
   
 

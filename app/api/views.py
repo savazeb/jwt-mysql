@@ -9,19 +9,26 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView
 
 from .serializers import *
 
-class UserLoginView(RetrieveAPIView):
+class UserLoginView(APIView):
     serializer_class = UserLoginSerializer
     permission_classes = (AllowAny,)
 
+
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
         response = {
-            'sucess': 1,
-            'status_code': status.HTTP_200_OK,
-            'message': 'Login in succesfull',
-            'refresh': serializer.data['refresh'],
-            'token': serializer.data['access'],
+            'access': 'None',
+            'refresh': 'None'
         }
-        status_code = status.HTTP_200_OK
+        status_code = None
+        
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+
+        try:
+            response['access'] = serializer.data['access']
+            response['refresh'] = serializer.data['refresh']
+            status_code = status.HTTP_200_OK
+        except:
+            status_code = status.HTTP_404_NOT_FOUND
+
         return Response(response, status=status_code)
